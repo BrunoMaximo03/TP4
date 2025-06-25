@@ -293,11 +293,12 @@ public class Questao1 {
 
                 line = leitor.readLine(); // le a primeira linha "válida"
 
-                while (line != null & achou) {
+                while (line != null & !achou) {
                     if (line.startsWith(entrada + ",")) {
                         Show espetaculo = new Show();
                         espetaculo.readCSV(line);
                         arvore.inserir(espetaculo);
+                        System.out.println("olaaaa");
                         achou = true;
                     } else {
                         line = leitor.readLine(); // ler o restante
