@@ -234,7 +234,7 @@ public class Questao1 {
 
         // pesquisa PUBLIC
         public boolean pesquisa(String linha) {
-            System.out.println("=> raiz");
+            System.out.print("=> raiz");
             return pesquisa(raiz, linha);
         }
 
