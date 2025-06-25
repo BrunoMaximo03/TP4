@@ -2,7 +2,6 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 class Show {
     // atributos
     private String show_id;
@@ -184,7 +183,6 @@ class Show {
         System.out.println("] ##");
     }
 
-
     // Método de clone
 
     public Show clone() {
@@ -202,7 +200,10 @@ class Show {
         copia.listed_in = this.listed_in.clone();
         return copia;
     }
+}
 
+// classe main
+public class Questao1 {
 
     // CLASSE NÓ
 
@@ -216,7 +217,6 @@ class Show {
             this.dir = null;
         }
     }
-
 
     // CLASSE ÁRVORE
 
@@ -235,33 +235,29 @@ class Show {
         // pesquisa PUBLIC
         public boolean pesquisa(String linha) {
             System.out.println("=> raiz");
-            return pesquisa(raiz,linha);
+            return pesquisa(raiz, linha);
         }
 
-        //pesquisa PRIVATE
+        // pesquisa PRIVATE
         private boolean pesquisa(No noAtual, String linha) {
             boolean achou;
-            if(noAtual == null) {
+            if (noAtual == null) {
                 achou = false;
                 comparacoes++;
-            }
-             else if(linha.equals(noAtual.elemento.getTitle())) {
+            } else if (linha.equals(noAtual.elemento.getTitle())) {
                 comparacoes++;
                 achou = true;
-            }
-             else if(linha.compareTo(noAtual.elemento.getTitle()) < 0) {
+            } else if (linha.compareTo(noAtual.elemento.getTitle()) < 0) {
                 System.out.println(" esq");
                 comparacoes++;
-                achou = pesquisa(noAtual.esq,linha);
-            }  else{
+                achou = pesquisa(noAtual.esq, linha);
+            } else {
                 System.out.print(" dir");
                 comparacoes++;
-                achou = pesquisa(noAtual.dir,linha);
-        }
+                achou = pesquisa(noAtual.dir, linha);
+            }
             return achou;
         }
-
-
 
         // inserir PUBLIC
         public void inserir(Show show) {
@@ -281,11 +277,8 @@ class Show {
         }
     }
 
-// classe main
-public class Questao1 {
-
     public static void main(String[] args) {
-        
+
         Scanner sc = new Scanner(System.in);
         String entrada;
         Arvore arvore = new Arvore();
@@ -293,15 +286,15 @@ public class Questao1 {
         long tempoInicial = System.currentTimeMillis();
 
         try {
-            while(!(entrada = sc.nextLine()).equalsIgnoreCase("FIM")) {
+            while (!(entrada = sc.nextLine()).equalsIgnoreCase("FIM")) {
                 BufferedReader leitor = new BufferedReader(new FileReader("/tmp/disneyplus.csv"));
                 String line = leitor.readLine(); // está pulando o cabeçalho
                 boolean achou = false;
 
                 line = leitor.readLine(); // le a primeira linha "válida"
 
-                while(line != null & achou) {
-                    if(line.startsWith(entrada + ",")) {
+                while (line != null & achou) {
+                    if (line.startsWith(entrada + ",")) {
                         Show espetaculo = new Show();
                         espetaculo.readCSV(line);
                         arvore.inserir(espetaculo);
@@ -310,7 +303,7 @@ public class Questao1 {
                         line = leitor.readLine(); // ler o restante
                     }
                 }
-                if(!achou) {
+                if (!achou) {
                     System.out.println("Show ID " + entrada + " não encontrado.");
                 }
                 leitor.close();
@@ -320,9 +313,9 @@ public class Questao1 {
         }
 
         String titulo = sc.nextLine();
-        while(!titulo .equals("FIM")) {
+        while (!titulo.equals("FIM")) {
 
-            if(arvore.pesquisa(titulo) == true) {
+            if (arvore.pesquisa(titulo) == true) {
                 System.out.println(" SIM");
             } else {
                 System.out.println(" NAO");
@@ -330,10 +323,10 @@ public class Questao1 {
             titulo = sc.nextLine();
         }
 
-         long tempoFinal = System.currentTimeMillis();
-         long tempoTotal = tempoFinal - tempoInicial;
+        long tempoFinal = System.currentTimeMillis();
+        long tempoTotal = tempoFinal - tempoInicial;
 
-         try {
+        try {
             java.io.PrintWriter arquivo = new java.io.PrintWriter("matricula_arvoreBinaria.txt", "UTF-8");
             arquivo.printf("850847\t%d\t%d \n", tempoTotal, arvore.getComparacoes());
             arquivo.close();
@@ -344,5 +337,4 @@ public class Questao1 {
         sc.close();
 
     }
- }       
 }
