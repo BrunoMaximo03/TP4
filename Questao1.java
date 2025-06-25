@@ -248,7 +248,7 @@ public class Questao1 {
                 comparacoes++;
                 achou = true;
             } else if (linha.compareTo(noAtual.elemento.getTitle()) < 0) {
-                System.out.println(" esq");
+                System.out.print(" esq");
                 comparacoes++;
                 achou = pesquisa(noAtual.esq, linha);
             } else {
@@ -298,7 +298,6 @@ public class Questao1 {
                         Show espetaculo = new Show();
                         espetaculo.readCSV(line);
                         arvore.inserir(espetaculo);
-                        System.out.println("olaaaa");
                         achou = true;
                     } else {
                         line = leitor.readLine(); // ler o restante
