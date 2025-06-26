@@ -405,7 +405,7 @@ int main()
     while (fgets(entrada, TAM_STR, stdin) && strcmp(entrada, "FIM\n") != 0)
     {
         entrada[strcspn(entrada, "\n")] = '\0';
-        arquivo = fopen("disneyplus.csv", "r");
+        arquivo = fopen("/tmp/disneyplus.csv", "r");
         if (!arquivo)
         {
             printf("Erro ao acessar o arquivo\n");
