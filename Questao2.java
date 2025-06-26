@@ -205,213 +205,150 @@ class Show {
 // classe main
 public class Questao2 {
 
-    // CLASSE NÓ
+    public static class NoArvoreSecundaria {
+    String chave;
+    Show show;
+    NoArvoreSecundaria esq, dir;
+    public NoArvoreSecundaria(Show show) {
+        this.chave = show.getTitle();
+        this.show = show;
+        this.esq = this.dir = null;
+    }
+}
 
-    // Nó da primeira árvore onde irá guardar os RELEASE_YEAR % 15 e onde cada nó
-    // aponta para uma árvore
-    public static class No1 {
-        int chave; // irá ser o releaseYear % 15
-        No1 esq, dir;
-        Arvore2 arvore;
-
-        public No1(int chave) {
-            this.chave = chave;
-            this.esq = null;
-            this.dir = null;
-            this.arvore = new Arvore2();
+public static class ArvoreSecundaria {
+    NoArvoreSecundaria raiz;
+    public ArvoreSecundaria() {
+        raiz = null;
+    }
+    public void inserir(Show show) {
+        raiz = inserir(raiz, show);
+    }
+    private NoArvoreSecundaria inserir(NoArvoreSecundaria no, Show show) {
+        if (no == null) {
+            no = new NoArvoreSecundaria(show);
+        } else if (show.getTitle().compareTo(no.chave) < 0) {
+            no.esq = inserir(no.esq, show);
+        } else if (show.getTitle().compareTo(no.chave) > 0) {
+            no.dir = inserir(no.dir, show);
+        }
+        return no;
+    }
+    public boolean pesquisa(String titulo, boolean printRaiz) {
+        if (printRaiz) System.out.print("raiz ");
+        return pesquisa(raiz, titulo);
+    }
+    private boolean pesquisa(NoArvoreSecundaria no, String titulo) {
+        if (no == null) return false;
+        if (titulo.equals(no.chave)) return true;
+        else if (titulo.compareTo(no.chave) < 0) {
+            System.out.print("esq ");
+            return pesquisa(no.esq, titulo);
+        } else {
+            System.out.print("dir ");
+            return pesquisa(no.dir, titulo);
         }
     }
+}
 
-    // CLASSE ÁRVORE - que irá guardar chaves - RELEASE_YEAR % 15
+public static class NoArvorePrincipal {
+    int chave;
+    NoArvorePrincipal esq, dir;
+    ArvoreSecundaria arvoreSecundaria;
+    public NoArvorePrincipal(int chave) {
+        this.chave = chave;
+        this.esq = this.dir = null;
+        this.arvoreSecundaria = new ArvoreSecundaria();
+    }
+}
 
-    public static class Arvore1 {
-        No1 raiz;
-
-        public Arvore1() {
-            int[] arvoreGerada = { 7, 3, 11, 1, 5, 9, 13, 0, 2, 4, 6, 8, 10, 12, 14 };
-            for (int chave : arvoreGerada) {
-                inserirReleaseYear(chave); // criando a Primeira arvore já com os valores
-            }
-        }
-
-        public void inserirReleaseYear(int chave) {
-            raiz = inserirReleaseYear(raiz, chave);
-        }
-
-        private No1 inserirReleaseYear(No1 noAtual, int chave) {
-            if (noAtual == null) {
-                noAtual = new No1(chave);
-            } else if (chave < noAtual.chave) {
-                noAtual = inserirReleaseYear(noAtual.esq, chave);
-            } else {
-                noAtual = inserirReleaseYear(noAtual.dir, chave);
-            }
-            return noAtual;
-        }
-
-        // inserir PUBLIC - Primeira Arvore - RELEASE_YEAR % 15 PRIMEIRA ARVORE
-        public void inserirPrimeiraArvore(Show show) {
-            int calculaMod15Release_year = (show.getRelease_year() % 15);
-            inserirPrimeiraArvore(raiz, calculaMod15Release_year, show);
-        }
-
-        // inserir PRIVATE - Primeira Arvore - RELEASE_YEAR % 15 PRIMEIRA ARVORE
-        public void inserirPrimeiraArvore(No1 noAtual, int chave, Show show) {
-            if (noAtual == null)
-                return;
-            if (chave == noAtual.chave)
-                noAtual.arvore.inserirSegundaArvore(show);
-            else if (chave < noAtual.chave)
-                inserirPrimeiraArvore(noAtual.esq, chave, show);
-            else
-                inserirPrimeiraArvore(noAtual.dir, chave, show);
-        }
-
-        public boolean pesquisaChaves(String titulo) {
-            return pesquisaChaves(raiz, titulo, true);
-        }
-
-        private boolean pesquisaChaves(No1 noAtual, String titulo, boolean imprimirRaiz) {
-            if (noAtual == null) {
-                return false;
-            }
-            boolean achou = noAtual.arvore.pesquisaSegundaArvore(titulo, imprimirRaiz);
-            if (achou) {
-                return true;
-            }
-            System.out.print("ESQ ");
-            if (pesquisaChaves(noAtual.esq, titulo, false)) {
-                return true;
-            }
-            System.out.print("DIR ");
-            if (pesquisaChaves(noAtual.dir, titulo, false)) {
-                return true;
-            }
-            return false;
-        }
+public static class ArvorePrincipal {
+    NoArvorePrincipal raiz;
+    public ArvorePrincipal() {
+        int[] chaves = {7,3,11,1,5,9,13,0,2,4,6,8,10,12,14};
+        for (int chave : chaves) inserirAno(chave);
+    }
+    
+    private void inserirAno(int chave) {
+        raiz = inserirAno(chave, raiz);
     }
 
-    // Nó da segunda árvore onde irá guardar os TITULOS
-    public static class No2 {
-        String titulo;
-        Show show;
-        No2 esq, dir;
-
-        public No2(Show show) {
-            this.show = show;
-            this.titulo = show.getTitle();
-            this.esq = null;
-            this.dir = null;
-        }
+    private NoArvorePrincipal inserirAno(int chave, NoArvorePrincipal no) {
+        if (no == null) return new NoArvorePrincipal(chave);
+        if (chave < no.chave) no.esq = inserirAno(chave, no.esq);
+        else if (chave > no.chave) no.dir = inserirAno(chave, no.dir);
+        return no;
     }
 
-    // CLASSE ÁRVORE - que irá guardar Strings - TÍTULO
-
-    public static class Arvore2 {
-        No2 raiz;
-
-        public Arvore2() {
-            this.raiz = null;
-        }
-
-        // inserir PUBLIC - Segunda Arvore - TITULOS SEGUNDA ARVORE
-        public void inserirSegundaArvore(Show show) {
-            raiz = inserirSegundaArvore(raiz, show);
-        }
-
-        // inserir PRIVATE - Segunda Arvore - TITULOS SEGUNDA ARVORE
-        private No2 inserirSegundaArvore(No2 noAtual, Show show) {
-            if (noAtual == null) {
-                noAtual = new No2(show);
-            } else if (show.getTitle().compareTo(noAtual.titulo) < 0) {
-                noAtual.esq = inserirSegundaArvore(noAtual.esq, show);
-            } else {
-                noAtual.dir = inserirSegundaArvore(noAtual.dir, show);
-            }
-            return noAtual;
-        }
-
-        // pesquisa PUBLIC SEGUNDA ARVORE
-        public boolean pesquisaSegundaArvore(String linha, boolean imprimirRaiz) {
-            if (imprimirRaiz) {
-                System.out.print("raiz ");
-            }
-            return pesquisaSegundaArvore(raiz, linha);
-        }
-
-        // pesquisa PRIVATE SEGUNDA ARVORE
-        private boolean pesquisaSegundaArvore(No2 noAtual, String linha) {
-            if (noAtual == null) {
-                return false;
-            } else if (linha.equals(noAtual.titulo)) {
-                return true;
-            } else if (linha.compareTo(noAtual.titulo) < 0) {
-                System.out.print("esq ");
-                return pesquisaSegundaArvore(noAtual.esq, linha);
-            } else {
-                System.out.print("dir ");
-                return pesquisaSegundaArvore(noAtual.dir, linha);
-            }
-        }
+    public void inserir(Show s) {
+        int mod = s.getRelease_year() % 15;
+        inserir(s, mod, raiz);
     }
+    private void inserir(Show s, int mod, NoArvorePrincipal no) {
+        if (no == null) return;
+        if (mod == no.chave) no.arvoreSecundaria.inserir(s);
+        else if (mod < no.chave) inserir(s, mod, no.esq);
+        else inserir(s, mod, no.dir);
+    }
+    public boolean pesquisa(String titulo) {
+        return pesquisa(raiz, titulo, true);
+    }
+    private boolean pesquisa(NoArvorePrincipal no, String titulo, boolean printRaiz) {
+        if (no == null) return false;
+        boolean achou = no.arvoreSecundaria.pesquisa(titulo, printRaiz);
+        if (achou) return true;
+        System.out.print("ESQ ");
+        if (pesquisa(no.esq, titulo, false)) return true;
+        System.out.print("DIR ");
+        if (pesquisa(no.dir, titulo, false)) return true;
+        return false;
+    }
+}
 
     public static void main(String[] args) {
-
+        long inicio = System.currentTimeMillis();
         Scanner sc = new Scanner(System.in);
         String entrada;
-
-        Long tempoInicial = System.currentTimeMillis();
-        Arvore1 arvore1 = new Arvore1();
-
+        ArvorePrincipal arvore = new ArvorePrincipal();
         try {
             while (!(entrada = sc.nextLine()).equalsIgnoreCase("FIM")) {
                 BufferedReader leitor = new BufferedReader(new FileReader("/tmp/disneyplus.csv"));
-                String line = leitor.readLine(); // está pulando o cabeçalho
+                String linha = leitor.readLine();
                 boolean achou = false;
-
-                line = leitor.readLine(); // le a primeira linha "válida"
-
-                while (line != null & !achou) {
-                    if (line.startsWith(entrada + ",")) {
-                        Show espetaculo = new Show();
-                        espetaculo.readCSV(line);
-                        arvore1.inserirPrimeiraArvore(espetaculo);
+                linha = leitor.readLine();
+                while (linha != null && !achou) {
+                    if (linha.startsWith(entrada + ",")) {
+                        Show s = new Show();
+                        s.readCSV(linha);
+                        arvore.inserir(s);
                         achou = true;
                     } else {
-                        line = leitor.readLine(); // ler o restante
+                        linha = leitor.readLine();
                     }
-                }
-                if (!achou) {
-                    System.out.println("Show ID " + entrada + " não encontrado.");
                 }
                 leitor.close();
             }
         } catch (Exception e) {
             System.out.println("Erro ao achar!" + e.getMessage());
         }
-
         String titulo = sc.nextLine();
         while (!titulo.equals("FIM")) {
-
-            boolean achou = arvore1.pesquisaChaves(titulo);
-
-            if (achou) {
-                System.out.println("SIM");
-            } else {
-                System.out.println("NAO");
-            }
+            boolean achou = arvore.pesquisa(titulo);
+            if (achou) System.out.println("SIM");
+            else System.out.println("NAO");
             titulo = sc.nextLine();
         }
         sc.close();
-        long tempoFinal = System.currentTimeMillis();
-        long tempoTotal = tempoFinal - tempoInicial;
+        long fim = System.currentTimeMillis();
+        long tempo = fim - inicio;
 
         try {
-            java.io.PrintWriter arquivo = new java.io.PrintWriter("matricula_arvoreBinaria.txt", "UTF-8");
-            arquivo.printf("850847\t%d\t%d \n", tempoTotal);
-            arquivo.close();
-        } catch (Exception e) {
-            System.out.println("Erro ao criar o arquivo " + e.getMessage());
+            PrintWriter log = new PrintWriter("Arvore_de_arvores" + "_arvoreArvore.txt");
+            log.println("850847" + "\t" + tempo + "\t0");
+            log.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao gravar log: " + e.getMessage());
         }
     }
-}
+ }
+
