@@ -303,9 +303,6 @@ public class Questao1 {
                         line = leitor.readLine(); // ler o restante
                     }
                 }
-                if (!achou) {
-                    System.out.println("Show ID " + entrada + " não encontrado.");
-                }
                 leitor.close();
             }
         } catch (Exception e) {
