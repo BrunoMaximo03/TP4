@@ -205,81 +205,86 @@ class Show {
 // classe main
 public class Questao6 {
 
-    // m1 = tamanho da tabela 21
+    public static class Hash{
+    private Show tabela[];
+    private int comparacoes;
+    private int m1;
 
-    public static class Hash {
-        Show tabela[];
-        int m1;
-        private int comparacoes = 0;
-
-        public Hash() {
-            this.m1 = 21;
-            tabela = new Show[m1];
-            for (int i = 0; i < m1; i++) {
-                tabela[i] = null;
-            }
-            comparacoes = 0;
+    public Hash(){
+        this.m1 = 21;
+        tabela = new Show[m1];
+        for(int i = 0; i < m1; i++){
+            tabela[i] = null;
         }
+        comparacoes = 0;
+    }
 
-        public int hashT1(String nome) {
-            int posicao = 0;
-            for (int i = 0; i < nome.length(); i++) {
-                posicao += nome.charAt(i);
-            }
-            return posicao % m1;
+    public int getComparacoes() {
+        return comparacoes;
+    }
+
+    private int hash(String nome){
+        int soma = 0;
+        for(int i = 0; i < nome.length(); i++){
+            soma += nome.charAt(i);
         }
+        return soma % m1;
+    }
 
-        public int rehashT1(String nome) {
-            int posicao = 0;
-            for (int i = 0; i < nome.length(); i++) {
-                posicao += nome.charAt(i);
-            }
-            return ++posicao % m1;
+    // A saida do verde nao esta utilizando ela corretamente. So esta usando a funcao hash
+    private int rehash(String nome){
+        int soma = 0;
+        for(int i = 0; i < nome.length(); i++){
+            soma += nome.charAt(i);
         }
+        return soma % m1;
+    } 
 
-        public int getComparacoes() {
-            return this.comparacoes;
-        }
-
-        public boolean inserir(Show show) {
-
-            boolean resp = false;
-            if (show != null) {
+    public boolean inserir(Show show){
+        boolean resp = false;
+        if(show != null){
+            comparacoes++;
+            int pos = hash(show.getTitle());
+            if(tabela[pos] == null){
                 comparacoes++;
-                int posicao = hashT1(show.getTitle());
-                if (tabela[posicao] == null) {
+                tabela[pos] = show;
+                resp = true;
+            }
+            else{
+                pos = rehash(show.getTitle());
+                if(tabela[pos] == null){
                     comparacoes++;
-                    tabela[posicao] = show;
+                    tabela[pos] = show;
                     resp = true;
-                } else {
-                    posicao = rehashT1(show.getTitle());
-                    if (tabela[posicao] == null) {
-                        comparacoes++;
-                        tabela[posicao] = show;
-                        resp = true;
-                    }
                 }
             }
-            return resp;
         }
+        return resp;
+    }
 
-        public boolean pesquisar(String nome) {
-            boolean resp = false;
-            int posicao = hashT1(nome);
-            if (tabela[posicao] != null && tabela[posicao].getTitle().equalsIgnoreCase(nome)) {
+    public boolean pesquisar(String nome){
+        boolean resp = false;
+        int posicao = hash(nome);
+
+        if(tabela[posicao] != null){
+            comparacoes++;
+            if(tabela[posicao].getTitle().compareTo(nome) == 0){
                 comparacoes++;
                 resp = true;
-            } else {
-                posicao = rehashT1(nome);
-                if (tabela[posicao] != null && tabela[posicao].getTitle().equalsIgnoreCase(nome)) {
+            }
+            else{
+                posicao = rehash(nome);
+                if(tabela[posicao].getTitle().compareTo(nome) == 0){
                     comparacoes++;
                     resp = true;
                 }
             }
-            System.out.print(" (Posicao: " + posicao + ")");
-            return resp;
         }
+        System.out.print(" (Posicao: " + posicao + ")");
+        return resp;
     }
+    
+}
 
     public static void main(String[] args) {
 
